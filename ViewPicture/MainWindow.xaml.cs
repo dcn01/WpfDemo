@@ -89,36 +89,48 @@ namespace ViewPicture
             var position = e.GetPosition(img);
 
             // Return the general transform for the specified visual object.
-            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(this);
+            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
             // Retrieve the point value relative to the parent.
             Point currentPoint = generalTransform1.Transform(new Point(0, 0));
             double left = currentPoint.X;
             double top = currentPoint.Y;
-            double right = this.ActualWidth - left - IMG1.ActualWidth* transform2.ScaleX;
-            double bottom = this.ActualHeight - top - IMG1.ActualHeight * transform2.ScaleY;
+            double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform2.ScaleX;
+            double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform2.ScaleY;
             bool IsFresh = false;
 
-            if (!((mouseXY.X - position.X < 0 && left >= 0) || (mouseXY.X - position.X > 0 && right >= 0)))
+            if ((mouseXY.X - position.X < 0 && left < 0) || (mouseXY.X - position.X > 0 && right < 0))
             {
-                transform.X -= mouseXY.X - position.X;
+                if (mouseXY.X - position.X < 0 && transform.X - mouseXY.X + position.X > 0)
+                    transform.X = 0;
+                else if (mouseXY.X - position.X > 0 && transform.X - mouseXY.X + position.X < borderWin.ActualWidth - IMG1.ActualWidth * transform2.ScaleX)
+                    transform.X = borderWin.ActualWidth - IMG1.ActualWidth * transform2.ScaleX;
+                else
+                {
+                    transform.X -= mouseXY.X - position.X;
+                }
+
                 IsFresh = true;
             }
-          
-            
-            if (!((mouseXY.Y - position.Y < 0 && top >= 0) || (mouseXY.Y - position.Y > 0 && bottom >= 0)))
+
+
+            if ((mouseXY.Y - position.Y < 0 && top < 0) || (mouseXY.Y - position.Y > 0 && bottom < 0))
             {
-                transform.Y -= mouseXY.Y - position.Y;
+                if (mouseXY.Y - position.Y < 0 && transform.Y - mouseXY.Y + position.Y > 0)
+                    transform.Y = 0;
+                else if (mouseXY.Y - position.Y > 0 && transform.Y - mouseXY.Y + position.Y < borderWin.ActualHeight - IMG1.ActualHeight * transform2.ScaleY)
+                    transform.Y = borderWin.ActualHeight - IMG1.ActualHeight * transform2.ScaleY;
+                else
+                {
+                    transform.Y -= mouseXY.Y - position.Y;
+                }
                 IsFresh = true;
             }
-            
+
             if (IsFresh)
             {
                 mouseXY = position;
             }
-            else
-            {
-                this.DragMove();
-            }
+
         }
 
         private void IMG1_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -128,9 +140,10 @@ namespace ViewPicture
             {
                 return;
             }
-            var point = e.GetPosition(img);
+            //var point = e.GetPosition(img);
+            var point = new Point() { X = borderWin.ActualWidth / 2.0, Y = borderWin.ActualHeight / 2.0 };
             var group = IMG.FindResource("Imageview") as TransformGroup;
-            var delta = e.Delta * 0.003;
+            var delta = e.Delta * 0.002;
             DowheelZoom(group, point, delta);
         }
 
@@ -142,8 +155,24 @@ namespace ViewPicture
             transform.ScaleX += delta;
             transform.ScaleY += delta;
             var transform1 = group.Children[1] as TranslateTransform;
+            // Return the general transform for the specified visual object.
+            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
+            // Retrieve the point value relative to the parent.
+            Point currentPoint = generalTransform1.Transform(new Point(0, 0));
+            double left = currentPoint.X;
+            double top = currentPoint.Y;
+            double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform.ScaleX;
+            double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform.ScaleY;
             transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
             transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            //if (left >= 0&&left!=right)
+            //    transform1.X = 5;
+            //if (right >= 0 && left != right)
+            //    transform1.X = borderWin.ActualWidth-IMG1.ActualWidth;
+            //if (top >= 0 && top != bottom)
+            //    transform1.Y = 5;
+            //if (bottom >= 0 && top != bottom)
+            //    transform1.Y = borderWin.ActualHeight - IMG1.ActualHeight;
         }
 
         private void BackFrame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

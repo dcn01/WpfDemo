@@ -1,0 +1,2 @@
+E:\开源项目\WpfDemo\ControlLibrary\obj\Debug\App.g.cs
+E:\开源项目\WpfDemo\ControlLibrary\obj\Debug\ControlLibrary_MarkupCompile.cache

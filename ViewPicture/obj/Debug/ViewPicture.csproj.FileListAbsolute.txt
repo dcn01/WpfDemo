@@ -1,0 +1,16 @@
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\MainWindow.g.cs
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\App.g.cs
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture_MarkupCompile.cache
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture_MarkupCompile.lref
+E:\开源项目\WpfDemo\ViewPicture\bin\Debug\ViewPicture.exe
+E:\开源项目\WpfDemo\ViewPicture\bin\Debug\ViewPicture.pdb
+E:\开源项目\WpfDemo\ViewPicture\bin\Debug\WpfControl.dll
+E:\开源项目\WpfDemo\ViewPicture\bin\Debug\WpfControl.pdb
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.csprojResolveAssemblyReference.cache
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\MainWindow.baml
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.g.resources
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.Properties.Resources.resources
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.csproj.GenerateResource.Cache
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.csproj.CoreCompileInputs.cache
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.exe
+E:\开源项目\WpfDemo\ViewPicture\obj\Debug\ViewPicture.pdb

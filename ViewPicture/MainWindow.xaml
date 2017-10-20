@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViewPicture"
-        mc:Ignorable="d" Background="Transparent" x:Name="win" Topmost="True"
+        mc:Ignorable="d" Background="Transparent" x:Name="win" Topmost="False"
         Title="MainWindow" MinHeight="411" MinWidth="611" WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="True" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="Border">
@@ -24,15 +24,17 @@
         <Grid.InputBindings>
             <MouseBinding Command="{Binding DoubleClickCloseCmd}" MouseAction="LeftDoubleClick"/>
         </Grid.InputBindings>
-        <Border x:Name="borderWin" CornerRadius="3" Background="#4C000000"  Margin="5"/>
-        <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Center" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="SizeAll" Focusable="False" x:Name="BackFrame">
-            <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
+        <Border x:Name="borderWin" CornerRadius="3" Background="#4C000000"  Margin="5">
+            <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Center" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="Hand" Focusable="False" x:Name="BackFrame">
+                <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
                              MouseMove="IMG1_MouseMove"
                              MouseWheel="IMG1_MouseWheel" >
-                <Image Name="IMG1" Source="Images/img.png" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
-            </ContentControl>
-        </ScrollViewer>
+                    <Image Name="IMG1" Source="Images/img.png" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
+                </ContentControl>
+            </ScrollViewer>
+        </Border>
+        
         <Button x:Name="borderClose" ToolTip="关闭浏览" Click="borderClose_Click"
                 Margin="0 15 10 0" HorizontalAlignment="Right" VerticalAlignment="Top" >
             <Button.Style>
