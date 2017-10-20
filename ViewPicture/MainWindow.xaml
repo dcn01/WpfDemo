@@ -4,9 +4,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViewPicture"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        mc:Ignorable="d" Background="Transparent" x:Name="win" Topmost="True"
+        Title="MainWindow" MinHeight="411" MinWidth="611" WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="True" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Border">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+    </Window.Resources>
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.75"/>
+    </Window.Effect>
+    <Grid x:Name="IMG">
+        <Grid.Resources>
+            <TransformGroup x:Key="Imageview">
+                <ScaleTransform/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.Resources>
+        <Grid.InputBindings>
+            <MouseBinding Command="{Binding DoubleClickCloseCmd}" MouseAction="LeftDoubleClick"/>
+        </Grid.InputBindings>
+        <Border x:Name="borderWin" CornerRadius="3" Background="#4C000000"  Margin="5"/>
+        <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Center" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="SizeAll" Focusable="False" x:Name="BackFrame">
+            <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
+                             MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
+                             MouseMove="IMG1_MouseMove"
+                             MouseWheel="IMG1_MouseWheel" >
+                <Image Name="IMG1" Source="Images/img.png" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
+            </ContentControl>
+        </ScrollViewer>
+        <Button x:Name="borderClose" ToolTip="关闭浏览" Click="borderClose_Click"
+                Margin="0 15 10 0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background" Value="#393a3c"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Border Background="{TemplateBinding Background}" CornerRadius="70" Height="35" Width="35">
+                                    <TextBlock x:Name="txt" Text="×" FontWeight="Bold"  Foreground="White" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 -2 0 0"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#d43f27"/>
+                                    </Trigger>
+                                    <Trigger Property="ButtonBase.IsPressed" Value="True">
+                                        <Setter Property="Margin" Value="1 0 0 0" TargetName="txt"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            
+        </Button>
     </Grid>
 </Window>
