@@ -47,9 +47,23 @@ namespace ViewPicture
                 return;
             }
             img.CaptureMouse();
-            mouseDown = true;
-            imgIsDown = true;
             mouseXY = e.GetPosition(img);
+            imgIsDown = true;
+            // Return the general transform for the specified visual object.
+            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
+            // Retrieve the point value relative to the parent.
+            Point currentPoint = generalTransform1.Transform(new Point(0, 0));
+            if (currentPoint.X >= 0 && currentPoint.Y >= 0)
+            {
+                mouseDown = false;             
+                this.DragMove();
+            }
+            else
+            {
+                imgIsDown = true;
+                mouseDown = true;
+            }
+
         }
 
         private void IMG1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -75,6 +89,8 @@ namespace ViewPicture
             {
                 Domousemove(img, e);
             }
+
+           
         }
 
         private void Domousemove(ContentControl img, MouseEventArgs e)
