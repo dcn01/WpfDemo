@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -151,13 +152,13 @@ namespace ViewPicture
 
         private void IMG1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            var img = sender as ContentControl;
+            var img = sender as Window;
             if (img == null)
             {
                 return;
             }
             //var point = e.GetPosition(img);
-            var point = new Point() { X = borderWin.ActualWidth / 2.0, Y = borderWin.ActualHeight / 2.0 };
+            var point = new Point() { X = this.ActualWidth / 2.0, Y = this.ActualHeight / 2.0 };
             var group = IMG.FindResource("Imageview") as TransformGroup;
             var delta = e.Delta * 0.002;
             DowheelZoom(group, point, delta);
@@ -181,6 +182,9 @@ namespace ViewPicture
             double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform.ScaleY;
             transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
             transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            this.gridProgress.Visibility = Visibility.Visible;
+            txtProgress.Text = string.Format("{0}%", (int)(transform.ScaleX * 100));
+            (this.Resources["ShowProgress"] as Storyboard).Begin();
             //if (left >= 0&&left!=right)
             //    transform1.X = 5;
             //if (right >= 0 && left != right)
@@ -204,6 +208,13 @@ namespace ViewPicture
         private void borderClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void DoubleAnimationUsingKeyFrames_Completed(object sender, EventArgs e)
+        {
+            //(this.Resources["ShowProgress"] as Storyboard).Stop();
+            //gridProgress.Visibility = Visibility.Collapsed;
+            //gridProgress.Opacity = 1;
         }
     }
 }
