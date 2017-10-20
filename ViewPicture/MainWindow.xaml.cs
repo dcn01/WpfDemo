@@ -50,13 +50,12 @@ namespace ViewPicture
             img.CaptureMouse();
             mouseXY = e.GetPosition(img);
             imgIsDown = true;
-            // Return the general transform for the specified visual object.
-            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
-            // Retrieve the point value relative to the parent.
-            Point currentPoint = generalTransform1.Transform(new Point(0, 0));
-            if (currentPoint.X >= 0 && currentPoint.Y >= 0)
+            var group = IMG.FindResource("Imageview") as TransformGroup;
+            var transform = group.Children[0] as ScaleTransform;
+            if (transform.ScaleX<=1)
             {
                 mouseDown = false;
+                //this.Cursor = new Cursor( CursorType.Hand);
                 this.DragMove();
             }
             else
@@ -258,6 +257,8 @@ namespace ViewPicture
             {
                 transform1.X =0;
                 transform1.Y = 0;
+                transform.ScaleX = 1;
+                transform.ScaleY = 1;
             }
             txtProgress.Text = string.Format("{0}%", percent);
             (this.Resources["ShowProgress"] as Storyboard).Begin();
