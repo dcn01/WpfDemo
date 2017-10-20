@@ -56,7 +56,7 @@ namespace ViewPicture
             Point currentPoint = generalTransform1.Transform(new Point(0, 0));
             if (currentPoint.X >= 0 && currentPoint.Y >= 0)
             {
-                mouseDown = false;             
+                mouseDown = false;
                 this.DragMove();
             }
             else
@@ -91,7 +91,7 @@ namespace ViewPicture
                 Domousemove(img, e);
             }
 
-           
+
         }
 
         private void Domousemove(ContentControl img, MouseEventArgs e)
@@ -158,7 +158,7 @@ namespace ViewPicture
                 return;
             }
             //var point = e.GetPosition(img);
-            var point = new Point() { X = this.ActualWidth / 2.0, Y = this.ActualHeight / 2.0 };
+            var point = new Point() { X = borderWin.ActualWidth / 2.0, Y = borderWin.ActualHeight / 2.0 };
             var group = IMG.FindResource("Imageview") as TransformGroup;
             var delta = e.Delta * 0.002;
             DowheelZoom(group, point, delta);
@@ -180,19 +180,88 @@ namespace ViewPicture
             double top = currentPoint.Y;
             double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform.ScaleX;
             double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform.ScaleY;
-            transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-            transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            //transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+            //transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            if(transform.ScaleX> 1 && delta < 0)
+            {
+                if (left >= 0)
+                {
+                    if(right>=0)
+                    {
+                        transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+                    }
+                    else
+                    {
+                        transform1.X = 0;
+                    }
+                }
+                else
+                {
+                    if (right >= 0)
+                    {
+
+                        if (left >= 0)
+                        {
+                            transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+                        }
+                        else
+                        {
+                            transform1.X = borderWin.ActualWidth - IMG1.ActualWidth * transform.ScaleX;
+                        }
+                    }
+                    else
+                    {
+                        transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+                    }
+                }
+                if (top >= 0)
+                {
+
+                    if(bottom>=0)
+                    {
+                        transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+                    }
+                    else
+                    {
+                        transform1.Y = 0;
+                    }
+                }
+                else
+                {
+                    if (bottom >= 0)
+                    {
+
+                        if (top >= 0)
+                        {
+                            transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+                        }
+                        else
+                        {
+                            transform1.Y = borderWin.ActualHeight - IMG1.ActualHeight * transform.ScaleY;
+                        }
+                    }
+                    else
+                    {
+                        transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+                    }
+                } 
+            }
+            else
+            {
+                transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
+                transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+            }
+
             this.gridProgress.Visibility = Visibility.Visible;
-            txtProgress.Text = string.Format("{0}%", (int)(transform.ScaleX * 100));
+            int percent = (int)(transform.ScaleX * 100);
+            if (percent == 100)
+            {
+                transform1.X =0;
+                transform1.Y = 0;
+            }
+            txtProgress.Text = string.Format("{0}%", percent);
             (this.Resources["ShowProgress"] as Storyboard).Begin();
-            //if (left >= 0&&left!=right)
-            //    transform1.X = 5;
-            //if (right >= 0 && left != right)
-            //    transform1.X = borderWin.ActualWidth-IMG1.ActualWidth;
-            //if (top >= 0 && top != bottom)
-            //    transform1.Y = 5;
-            //if (bottom >= 0 && top != bottom)
-            //    transform1.Y = borderWin.ActualHeight - IMG1.ActualHeight;
+           
         }
 
         private void BackFrame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
