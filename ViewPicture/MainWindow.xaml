@@ -4,20 +4,26 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViewPicture"
-        mc:Ignorable="d" Background="Transparent" x:Name="win" Topmost="False"
-        Title="MainWindow" MinHeight="411" MinWidth="611" WindowStyle="None" PreviewMouseWheel="IMG1_MouseWheel" AllowsTransparency="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="True" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+        mc:Ignorable="d" Background="Transparent" x:Name="win" Topmost="False" AllowsTransparency="True"
+        Title="MainWindow" MinHeight="411" MinWidth="611" PreviewMouseWheel="IMG1_MouseWheel" WindowStartupLocation="CenterScreen" ShowInTaskbar="True" SizeToContent="WidthAndHeight" ResizeMode="NoResize" Cursor="Hand" IsHitTestVisible="True" WindowStyle="None">
     <Window.Resources>
         <Style TargetType="Border">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
         <Storyboard x:Key="ShowProgress">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="gridProgress" Storyboard.TargetProperty="(UIElement.Opacity)" Completed="DoubleAnimationUsingKeyFrames_Completed">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="gridProgress" Storyboard.TargetProperty="(UIElement.Opacity)">
                 <EasingDoubleKeyFrame KeyTime="00:00:0" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:1.5" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:0.5" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:1" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem x:Name="Save" Header="保存图片" Click="Save_Click"/>
+            <MenuItem x:Name="Quite" Header="退出浏览" Click="Quite_Click"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.75"/>
     </Window.Effect>
@@ -36,7 +42,7 @@
                 <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
                              MouseMove="IMG1_MouseMove">
-                    <Image Name="IMG1"  Source="Images/img.png" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
+                    <Image Name="IMG1"  Source="Images/white.jpg" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
                 </ContentControl>
             </ScrollViewer>
         </Border>
@@ -71,7 +77,7 @@
         <Grid x:Name="gridProgress" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.RenderTransform>
                 <TransformGroup>
-                    
+
                 </TransformGroup>
             </Grid.RenderTransform>
             <Border CornerRadius="5" Width="100" Height="37" Background="#7F0F0F0F">

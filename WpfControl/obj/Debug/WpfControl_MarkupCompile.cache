@@ -4,7 +4,7 @@
 library
 C#
 .cs
-E:\开源项目\WpfDemo\WpfControl\obj\Debug\
+E:\程序源码\WpfDemo\WpfControl\obj\Debug\
 WpfControl
 none
 false
@@ -13,7 +13,7 @@ DEBUG;TRACE
 6-1032608979
 
 15-1624399938
-16-18325307
+16259402939
 Controls\frmOnlyShowMessageBox.xaml;Themes\Generic.xaml;Themes\WindowButton.xaml;Themes\WpfTabControl.xaml;Themes\WpfTabItem.xaml;Themes\WpfWindow.xaml;
 
 False

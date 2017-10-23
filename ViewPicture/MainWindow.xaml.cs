@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -28,18 +30,51 @@ namespace ViewPicture
             this.DataContext = this;
         }
 
+        #region 字段
+        /// <summary>
+        /// 鼠标左键是否按下
+        /// </summary>
         private bool mouseDown;
+        /// <summary>
+        /// 图片是否已经按下
+        /// </summary>
         private bool imgIsDown = false;
+        /// <summary>
+        /// 上一次鼠标所在位置点
+        /// </summary>
         private Point mouseXY;
+        /// <summary>
+        /// 双击关闭事件
+        /// </summary>
+        public DeletgateCommand<string> DoubleClickCloseCmd { get; set; }
+        /// <summary>
+        /// 图片路径
+        /// </summary>
+        public string ImgPath { get; set; }
+        #endregion
 
-        private void DoClose(string obj)
+        #region 单例
+        public static MainWindow frm = null;
+        public static MainWindow Instanse
         {
-            this.Close();
+            get
+            {
+                if(frm==null||!frm.IsLoaded)
+                {
+                    frm = new MainWindow();
+                }
+                return frm;
+            }
         }
 
+        #endregion
 
-        public DeletgateCommand<string> DoubleClickCloseCmd { get; set; }
-
+        #region 缩放移动
+        /// <summary>
+        /// 图片左键按下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IMG1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var img = sender as ContentControl;
@@ -52,10 +87,10 @@ namespace ViewPicture
             imgIsDown = true;
             var group = IMG.FindResource("Imageview") as TransformGroup;
             var transform = group.Children[0] as ScaleTransform;
-            if (transform.ScaleX<=1)
+            if (transform.ScaleX <= 1)
             {
                 mouseDown = false;
-                //this.Cursor = new Cursor( CursorType.Hand);
+
                 this.DragMove();
             }
             else
@@ -66,6 +101,11 @@ namespace ViewPicture
 
         }
 
+        /// <summary>
+        /// 图片左键释放
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IMG1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var img = sender as ContentControl;
@@ -78,6 +118,11 @@ namespace ViewPicture
             imgIsDown = false;
         }
 
+        /// <summary>
+        /// 图片鼠标移动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IMG1_MouseMove(object sender, MouseEventArgs e)
         {
             var img = sender as ContentControl;
@@ -93,6 +138,11 @@ namespace ViewPicture
 
         }
 
+        /// <summary>
+        /// 执行移动操作
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="e"></param>
         private void Domousemove(ContentControl img, MouseEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
@@ -104,9 +154,8 @@ namespace ViewPicture
             var transform2 = group.Children[0] as ScaleTransform;
             var position = e.GetPosition(img);
 
-            // Return the general transform for the specified visual object.
             GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
-            // Retrieve the point value relative to the parent.
+
             Point currentPoint = generalTransform1.Transform(new Point(0, 0));
             double left = currentPoint.X;
             double top = currentPoint.Y;
@@ -149,6 +198,11 @@ namespace ViewPicture
 
         }
 
+        /// <summary>
+        /// 在最外层执行滚轮操作，对应图片缩放
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void IMG1_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             var img = sender as Window;
@@ -156,13 +210,19 @@ namespace ViewPicture
             {
                 return;
             }
-            //var point = e.GetPosition(img);
+
             var point = new Point() { X = borderWin.ActualWidth / 2.0, Y = borderWin.ActualHeight / 2.0 };
             var group = IMG.FindResource("Imageview") as TransformGroup;
             var delta = e.Delta * 0.002;
             DowheelZoom(group, point, delta);
         }
 
+        /// <summary>
+        /// 执行缩放操作
+        /// </summary>
+        /// <param name="group"></param>
+        /// <param name="point"></param>
+        /// <param name="delta"></param>
         private void DowheelZoom(TransformGroup group, Point point, double delta)
         {
             var pointToContent = group.Inverse.Transform(point);
@@ -171,21 +231,20 @@ namespace ViewPicture
             transform.ScaleX += delta;
             transform.ScaleY += delta;
             var transform1 = group.Children[1] as TranslateTransform;
-            // Return the general transform for the specified visual object.
+
             GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
-            // Retrieve the point value relative to the parent.
+
             Point currentPoint = generalTransform1.Transform(new Point(0, 0));
             double left = currentPoint.X;
             double top = currentPoint.Y;
             double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform.ScaleX;
             double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform.ScaleY;
-            //transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-            //transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
-            if(transform.ScaleX> 1 && delta < 0)
+
+            if (transform.ScaleX > 1 && delta < 0)
             {
                 if (left >= 0)
                 {
-                    if(right>=0)
+                    if (right >= 0)
                     {
                         transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
                     }
@@ -216,7 +275,7 @@ namespace ViewPicture
                 if (top >= 0)
                 {
 
-                    if(bottom>=0)
+                    if (bottom >= 0)
                     {
                         transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
                     }
@@ -243,7 +302,7 @@ namespace ViewPicture
                     {
                         transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
                     }
-                } 
+                }
             }
             else
             {
@@ -255,36 +314,85 @@ namespace ViewPicture
             int percent = (int)(transform.ScaleX * 100);
             if (percent == 100)
             {
-                transform1.X =0;
+                transform1.X = 0;
                 transform1.Y = 0;
                 transform.ScaleX = 1;
                 transform.ScaleY = 1;
             }
             txtProgress.Text = string.Format("{0}%", percent);
             (this.Resources["ShowProgress"] as Storyboard).Begin();
-           
+
         }
 
+        private Point CPoint;
+        /// <summary>
+        /// 窗口移动操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BackFrame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (imgIsDown)
             {
                 return;
             }
-            //int this.IMG1
             this.DragMove();
+            CPoint = e.GetPosition(BackFrame);
         }
 
+        #endregion
+
+        #region 关闭窗口，保存图片
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
+        /// <param name="obj"></param>
+        private void DoClose(string obj)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// 右上角关闭操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void borderClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void DoubleAnimationUsingKeyFrames_Completed(object sender, EventArgs e)
+        /// <summary>
+        /// 右键菜单关闭操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Quite_Click(object sender, RoutedEventArgs e)
         {
-            //(this.Resources["ShowProgress"] as Storyboard).Stop();
-            //gridProgress.Visibility = Visibility.Collapsed;
-            //gridProgress.Opacity = 1;
+            this.Close();
         }
+
+        /// <summary>
+        /// 保存图片操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.FileName = DateTime.Now.ToString("yyyy-MM-dd hhmmss");
+            sf.Filter = "*.png|*.png";
+            if (sf.ShowDialog() == true)
+            {
+                BitmapSource BS = (BitmapSource)IMG1.Source;
+                PngBitmapEncoder PBE = new PngBitmapEncoder();
+                PBE.Frames.Add(BitmapFrame.Create(BS));
+                using (Stream stream = File.Create(sf.FileName))
+                {
+                    PBE.Save(stream);
+                }
+            }
+        }
+        #endregion
     }
 }
