@@ -59,7 +59,7 @@ namespace ViewPicture
         {
             get
             {
-                if(frm==null||!frm.IsLoaded)
+                if (frm == null || !frm.IsLoaded)
                 {
                     frm = new MainWindow();
                 }
@@ -84,10 +84,16 @@ namespace ViewPicture
             }
             img.CaptureMouse();
             mouseXY = e.GetPosition(img);
-            imgIsDown = true;
             var group = IMG.FindResource("Imageview") as TransformGroup;
-            var transform = group.Children[0] as ScaleTransform;
-            if (transform.ScaleX <= 1)
+            var transform = group.Children[1] as TranslateTransform;
+            var transform2 = group.Children[0] as ScaleTransform;
+            GeneralTransform generalTransform1 = IMG1.TransformToAncestor(borderWin);
+            Point currentPoint = generalTransform1.Transform(new Point(0, 0));
+            double left = currentPoint.X;
+            double top = currentPoint.Y;
+            double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform2.ScaleX;
+            double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform2.ScaleY;
+            if (left>=0&&right>=0&&top>=0&&bottom>=0)
             {
                 mouseDown = false;
 
@@ -95,10 +101,11 @@ namespace ViewPicture
             }
             else
             {
+               
+                imgIsDown = true;
                 imgIsDown = true;
                 mouseDown = true;
             }
-
         }
 
         /// <summary>
@@ -242,66 +249,47 @@ namespace ViewPicture
 
             if (transform.ScaleX > 1 && delta < 0)
             {
-                if (left >= 0)
+                bool XIsContinue = true;
+                bool YIsContinue = true;
+                //-------X
+                if (right >= 0 && left < 0)
                 {
-                    if (right >= 0)
-                    {
-                        transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-                    }
-                    else
-                    {
-                        transform1.X = 0;
-                    }
+                    transform1.X = borderWin.ActualWidth - IMG1.ActualWidth * transform.ScaleX;
+                    XIsContinue = false;
                 }
-                else
-                {
-                    if (right >= 0)
-                    {
 
-                        if (left >= 0)
-                        {
-                            transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-                        }
-                        else
-                        {
-                            transform1.X = borderWin.ActualWidth - IMG1.ActualWidth * transform.ScaleX;
-                        }
-                    }
-                    else
-                    {
-                        transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
-                    }
+                if (left >= 0 && right < 0)
+                {
+                    transform1.X = 0;
+                    XIsContinue = false;
                 }
-                if (top >= 0)
-                {
 
-                    if (bottom >= 0)
-                    {
-                        transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
-                    }
-                    else
-                    {
-                        transform1.Y = 0;
-                    }
+                if (XIsContinue)
+                {
+                    transform1.X = -1 * ((pointToContent.X * transform.ScaleX) - point.X);
                 }
-                else
-                {
-                    if (bottom >= 0)
-                    {
 
-                        if (top >= 0)
-                        {
-                            transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
-                        }
-                        else
-                        {
-                            transform1.Y = borderWin.ActualHeight - IMG1.ActualHeight * transform.ScaleY;
-                        }
-                    }
-                    else
-                    {
-                        transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
-                    }
+                //-------Y
+                if (bottom >= 0 && top < 0)
+                {
+                    transform1.Y = borderWin.ActualHeight - IMG1.ActualHeight * transform.ScaleY;
+                    YIsContinue = false;
+                }
+
+                if (top >= 0 && bottom < 0)
+                {
+                    transform1.Y = 0;
+                    YIsContinue = false;
+                }
+
+                if (top < 0 && bottom < 0)
+                {
+                    transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
+                }
+
+                if (YIsContinue)
+                {
+                    transform1.Y = -1 * ((pointToContent.Y * transform.ScaleY) - point.Y);
                 }
             }
             else
