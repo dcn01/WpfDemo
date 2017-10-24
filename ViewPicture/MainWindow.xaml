@@ -10,11 +10,11 @@
         <Style TargetType="Border">
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
-        <Storyboard x:Key="ShowProgress">
+        <Storyboard x:Key="ShowProgress" Completed="Storyboard_Completed">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="gridProgress" Storyboard.TargetProperty="(UIElement.Opacity)">
                 <EasingDoubleKeyFrame KeyTime="00:00:0" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:0.5" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="00:00:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:0.4" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:0.8" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -39,7 +39,9 @@
             <MouseBinding Command="{Binding DoubleClickCloseCmd}" MouseAction="LeftDoubleClick"/>
         </Grid.InputBindings>
         <Border x:Name="borderWin"  CornerRadius="3" Background="#4C000000" Margin="5">
-            <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="Hand" Focusable="False" x:Name="BackFrame">
+            <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" 
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="Hand" Focusable="False" x:Name="BackFrame">
                 <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
                              MouseMove="IMG1_MouseMove">
@@ -47,6 +49,20 @@
                 </ContentControl>
             </ScrollViewer>
         </Border>
+        <Grid x:Name="gridProgress" Focusable="False" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RenderTransform>
+                <TransformGroup>
+
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Border Focusable="False" CornerRadius="5" Width="100" Height="37" Background="#7F0F0F0F">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Color="#199C9C9C"/>
+                </Border.Effect>
+
+            </Border>
+            <TextBlock x:Name="txtProgress" Text="100%" Foreground="White" TextAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
 
         <Button x:Name="borderClose" ToolTip="关闭浏览" Click="borderClose_Click"
                 Margin="0 15 10 0" HorizontalAlignment="Right" VerticalAlignment="Top" >
@@ -75,19 +91,6 @@
 
         </Button>
 
-        <Grid x:Name="gridProgress" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid.RenderTransform>
-                <TransformGroup>
-
-                </TransformGroup>
-            </Grid.RenderTransform>
-            <Border CornerRadius="5" Width="100" Height="37" Background="#7F0F0F0F">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Color="#199C9C9C"/>
-                </Border.Effect>
-
-            </Border>
-            <TextBlock x:Name="txtProgress" Text="100%" Foreground="White" TextAlignment="Center" VerticalAlignment="Center"/>
-        </Grid>
+       
     </Grid>
 </Window>
