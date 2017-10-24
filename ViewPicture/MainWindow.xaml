@@ -20,6 +20,7 @@
     </Window.Resources>
     <Window.ContextMenu>
         <ContextMenu>
+            <MenuItem x:Name="Open" Header="打开图片" Click="Open_Click"/>
             <MenuItem x:Name="Save" Header="保存图片" Click="Save_Click"/>
             <MenuItem x:Name="Quite" Header="退出浏览" Click="Quite_Click"/>
         </ContextMenu>
@@ -27,7 +28,7 @@
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.75"/>
     </Window.Effect>
-    <Grid x:Name="IMG" Cursor="Hand">
+    <Grid x:Name="IMG" Cursor="Hand" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.Resources>
             <TransformGroup x:Key="Imageview">
                 <ScaleTransform/>
@@ -37,12 +38,12 @@
         <Grid.InputBindings>
             <MouseBinding Command="{Binding DoubleClickCloseCmd}" MouseAction="LeftDoubleClick"/>
         </Grid.InputBindings>
-        <Border x:Name="borderWin"  CornerRadius="3" Background="#4C000000"  Margin="5">
-            <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Center" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="Hand" Focusable="False" x:Name="BackFrame">
+        <Border x:Name="borderWin"  CornerRadius="3" Background="#4C000000" Margin="5">
+            <ScrollViewer MouseLeftButtonDown="BackFrame_MouseLeftButtonDown" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Cursor="Hand" Focusable="False" x:Name="BackFrame">
                 <ContentControl  MouseLeftButtonDown="IMG1_MouseLeftButtonDown"   
                              MouseLeftButtonUp="IMG1_MouseLeftButtonUp"
                              MouseMove="IMG1_MouseMove">
-                    <Image Name="IMG1"  Source="Images/white.jpg" RenderTransform="{StaticResource Imageview}" Stretch="None" ></Image>
+                    <Image Name="IMG1"  Source="Images/img.png" RenderTransform="{StaticResource Imageview}" Stretch="None"  ></Image>
                 </ContentControl>
             </ScrollViewer>
         </Border>
@@ -88,7 +89,5 @@
             </Border>
             <TextBlock x:Name="txtProgress" Text="100%" Foreground="White" TextAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
-
-
     </Grid>
 </Window>
