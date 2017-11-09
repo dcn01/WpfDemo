@@ -1,0 +1,26 @@
+﻿<Window x:Class="ScreenUnlockDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:local="clr-namespace:ScreenUnlockDemo" x:Name="mw"
+        mc:Ignorable="d"
+        Title="MainWindow" WindowState="Maximized">
+    <Grid Background="White">
+        <local:ScreenUnlock
+                        PointArray="{Binding ElementName=mw,Path= PointArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Operation="Check">
+            <!--或Remember-->
+            <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="OnCheckedPoint">
+                    <Custom:EventToCommand Command="{Binding OnCheckedPoint}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="OnRememberPoint">
+                    <Custom:EventToCommand Command="{Binding OnRememberPoint}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>-->
+        </local:ScreenUnlock>
+    </Grid>
+</Window>
