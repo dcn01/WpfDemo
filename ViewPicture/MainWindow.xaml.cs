@@ -43,7 +43,7 @@ namespace ViewPicture
         /// 上一次鼠标所在位置点
         /// </summary>
         private Point mouseXY;
-    
+
         /// <summary>
         /// 双击关闭事件
         /// </summary>
@@ -87,7 +87,7 @@ namespace ViewPicture
             transformScale.ScaleY = 1;
             transformTranslate.X = 0;
             transformTranslate.Y = 0;
-            BitmapImage source =new  BitmapImage(new Uri(ImagePath));
+            BitmapImage source = new BitmapImage(new Uri(ImagePath));
             double x = SystemParameters.WorkArea.Width;
             double y = SystemParameters.WorkArea.Height;
             imageWidth = source.PixelWidth;
@@ -95,14 +95,14 @@ namespace ViewPicture
             bool isUniform = false;
             if (imageWidth > x)
             {
-                imageHeight = x / imageWidth* imageHeight;
+                imageHeight = x / imageWidth * imageHeight;
                 imageWidth = x;
                 isUniform = true;
             }
 
             if (imageHeight > y)
             {
-                imageWidth = y / imageHeight* imageWidth;
+                imageWidth = y / imageHeight * imageWidth;
                 imageHeight = y;
                 isUniform = true;
             }
@@ -113,17 +113,16 @@ namespace ViewPicture
                 imageWidth = this.MinWidth;
                 imageHeight = this.MinHeight;
             }
-          
+
             if (isUniform)
             {
                 IMG1.Stretch = Stretch.Uniform;
             }
 
             //Set Show In ScreenCenter
-            this.Left =x/2.0- borderWin.ActualWidth / 2.0;
-            this.Top = y / 2.0 - borderWin.ActualHeight / 2.0;
-            
             IMG1.Source = source;
+            this.Left = x / 2.0 - this.Width / 2.0;
+            this.Top = y / 2.0 - this.Height / 2.0;
         }
         #endregion
 
@@ -140,7 +139,7 @@ namespace ViewPicture
             {
                 return;
             }
-            
+
             var group = IMG.FindResource("Imageview") as TransformGroup;
             var transform = group.Children[1] as TranslateTransform;
             var transform2 = group.Children[0] as ScaleTransform;
@@ -197,10 +196,8 @@ namespace ViewPicture
             }
             if (mouseDown)
             {
-                Domousemove(img, e);
+                Domousemove(this, e);
             }
-
-
         }
 
         /// <summary>
@@ -208,7 +205,7 @@ namespace ViewPicture
         /// </summary>
         /// <param name="img"></param>
         /// <param name="e"></param>
-        private void Domousemove(ContentControl img, MouseEventArgs e)
+        private void Domousemove(MainWindow img, MouseEventArgs e)
         {
             if (e.LeftButton != MouseButtonState.Pressed)
             {
@@ -228,13 +225,28 @@ namespace ViewPicture
             double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transformScale.ScaleY;
             bool IsFresh = false;
 
-            if(IMG1.ActualHeight>=this.MinHeight)
+            if ((mouseXY.X - position.X < 0 && left < 0) || (mouseXY.X - position.X > 0 && right < 0))
             {
-                if ((mouseXY.X - position.X < 0 && left < 0) || (mouseXY.X - position.X > 0 && right < 0))
+                if(this.MinWidth>IMG1.ActualWidth)
                 {
                     if (mouseXY.X - position.X < 0 && transform.X - mouseXY.X + position.X > 0)
                         transform.X = 0;
-                    else if (mouseXY.X - position.X > 0 && transform.X - mouseXY.X + position.X < borderWin.ActualWidth - IMG1.ActualWidth * transformScale.ScaleX)
+                    else if (mouseXY.X - position.X > 0 && right + mouseXY.X - position.X > 0)
+                    {
+                        transform.X = borderWin.ActualWidth - IMG1.ActualWidth * transformScale.ScaleX;
+                    }
+                    else
+                    {
+                        transform.X -= mouseXY.X - position.X;
+                    }
+                    IsFresh = true;
+
+                }
+                else
+                {
+                    if (mouseXY.X - position.X < 0 && transform.X - mouseXY.X + position.X > 0)
+                        transform.X = 0;
+                    else if (mouseXY.X - position.X > 0 && right + mouseXY.X - position.X > 0)
                         transform.X = borderWin.ActualWidth - IMG1.ActualWidth * transformScale.ScaleX;
                     else
                     {
@@ -243,9 +255,27 @@ namespace ViewPicture
 
                     IsFresh = true;
                 }
+               
+            }
 
 
-                if ((mouseXY.Y - position.Y < 0 && top < 0) || (mouseXY.Y - position.Y > 0 && bottom < 0))
+            if ((mouseXY.Y - position.Y < 0 && top < 0) || (mouseXY.Y - position.Y > 0 && bottom < 0))
+            {
+                if (this.MinWidth > IMG1.ActualWidth)
+                {
+                    if (mouseXY.Y - position.Y < 0 && transform.Y - mouseXY.Y + position.Y > 0)
+                        transform.Y = 0;
+                    else if (mouseXY.Y - position.Y > 0 && bottom + mouseXY.Y - position.Y > 0)
+                    {
+                        transform.Y = borderWin.ActualHeight - IMG1.ActualHeight * transformScale.ScaleY;
+                    }
+                    else
+                    {
+                        transform.Y -= mouseXY.Y - position.Y;  
+                    }
+                    IsFresh = true;
+                }
+                else
                 {
                     if (mouseXY.Y - position.Y < 0 && transform.Y - mouseXY.Y + position.Y > 0)
                         transform.Y = 0;
@@ -257,19 +287,12 @@ namespace ViewPicture
                     }
                     IsFresh = true;
                 }
+               
+            }
 
-                if (IsFresh)
-                {
-                    mouseXY = position;
-                }
-            }
-            else
-            {
-                transform.X -= mouseXY.X - position.X;
-                transform.Y -= mouseXY.Y - position.Y;
-                mouseXY = position;
-            }
            
+                mouseXY = position;
+            
 
         }
 
@@ -317,7 +340,7 @@ namespace ViewPicture
             double right = borderWin.ActualWidth - left - IMG1.ActualWidth * transform.ScaleX;
             double bottom = borderWin.ActualHeight - top - IMG1.ActualHeight * transform.ScaleY;
 
-            if (transform.ScaleX > 1 && delta < 0&&IMG1.ActualHeight>=this.MinHeight)
+            if (transform.ScaleX > 1 && delta < 0 && IMG1.ActualHeight >= this.MinHeight)
             {
                 bool XIsContinue = true;
                 bool YIsContinue = true;
@@ -381,7 +404,7 @@ namespace ViewPicture
             (this.Resources["ShowProgress"] as Storyboard).Begin();
 
         }
-      
+
         /// <summary>
         /// 窗口移动操作
         /// </summary>
@@ -389,8 +412,8 @@ namespace ViewPicture
         /// <param name="e"></param>
         private void BackFrame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
- 
-            if (e.ButtonState==MouseButtonState.Pressed)
+
+            if (e.ButtonState == MouseButtonState.Pressed)
             {
                 this.DragMove();
             }
@@ -464,8 +487,19 @@ namespace ViewPicture
                 InitImage(ImgPath);
             }
         }
+
         #endregion
 
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            this.DragMove();
 
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            this.gridProgress.Visibility = Visibility.Collapsed;
+        }
     }
 }
